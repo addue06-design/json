@@ -1,0 +1,20 @@
+{
+  "sites": [
+    {
+      "key": "Ja18",
+      "name": "Ja18 資源",
+      "type": 3,
+      "api": "csp_AppYsV2",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "ext": "https://raw.githubusercontent.com/addue06-design/json/784db26d632f6f85530742c04a730983da1f70f5/Ja18"
+    }
+  ],
+  "lives": [
+  ],
+  "parses": [
+  ],
+  "rules": [
+  ]
+}
