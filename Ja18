@@ -1,0 +1,82 @@
+let 分类 = ['電影', '劇集', '綜藝', '動漫'];
+let 排序 = ['最新', '熱門', '評分'];
+let 來源 = ['主站', '備站'];
+
+function getHeader() {
+  let login = source.getLoginHeader();
+  if (!login) return {};
+  try {
+    return eval(login);
+  } catch (e) {
+    return {};
+  }
+}
+
+function home() {
+  return JSON.stringify({
+    class: 分类.map((name, i) => ({ type_id: i + '', type_name: name }))
+  });
+}
+
+function category(tid, pg, filter, ext) {
+  let url = `https://ja18.tv/list/${tid}?page=${pg}&sort=${ext.排序 || '最新'}&source=${ext.來源 || '主站'}`;
+  let html = java.ajax(url, getHeader());
+  let items = J.select(html, '.vodlist .item').map(item => ({
+    vod_id: J.attr(item, 'href'),
+    vod_name: J.text(item, '.title'),
+    vod_pic: J.attr(item, 'data-src'),
+    vod_remarks: J.text(item, '.remarks')
+  }));
+  return JSON.stringify({ list: items });
+}
+
+function search(wd) {
+  let url = `https://ja18.tv/search?wd=${wd}`;
+  let html = java.ajax(url, getHeader());
+  let items = J.select(html, '.vodlist .item').map(item => ({
+    vod_id: J.attr(item, 'href'),
+    vod_name: J.text(item, '.title'),
+    vod_pic: J.attr(item, 'data-src'),
+    vod_remarks: J.text(item, '.remarks')
+  }));
+  return JSON.stringify({ list: items });
+}
+
+function detail(id) {
+  let html = java.ajax(`https://ja18.tv${id}`, getHeader());
+  let title = J.text(html, '.title');
+  let pic = J.attr(html, '.poster', 'src');
+  let content = J.text(html, '.content');
+  let playUrls = J.select(html, '.playlist a').map(a => {
+    let name = J.text(a);
+    let href = J.attr(a, 'href');
+    return `${name}$${href}`;
+  }).join('#');
+  return JSON.stringify({
+    list: [{
+      vod_id: id,
+      vod_name: title,
+      vod_pic: pic,
+      vod_content: content,
+      vod_play_from: '主線',
+      vod_play_url: playUrls
+    }]
+  });
+}
+
+function play(url) {
+  return JSON.stringify({
+    parse: 0,
+    url: url,
+    header: '',
+    js: `
+      if (typeof player !== 'undefined') {
+        player.speed = 1.25;
+        player.pip = true;
+        player.longPressSpeed = 2.0;
+        player.autoFullscreen = true;
+      }
+    `,
+    type: 'hls'
+  });
+}
