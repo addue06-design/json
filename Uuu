@@ -2,7 +2,7 @@
   "key": "ja18",
   "name": "Ja18全功能解析",
   "type": 3,
-  "api": "https://你的網址/Ja18.js",
+  "api": "https://raw.githubusercontent.com/addue06-design/json/refs/heads/develop/Ja18",
   "searchable": 1,
   "quickSearch": 1,
   "filterable": 1,
